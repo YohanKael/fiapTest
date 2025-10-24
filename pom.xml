@@ -34,7 +34,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Validações com @NotNull, @Email etc (Mantido, mas usaremos validação manual) -->
+        <!-- Validações com @NotNull, @Email etc (Usado pelo Validation Starter) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -69,23 +69,19 @@
             </exclusions>
         </dependency>
 
-        <!-- BDD: Cucumber Core -->
+        <!-- BDD: Cucumber Core (Java, Spring, Platform Engine) -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- BDD: Integração Spring -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-spring</artifactId>
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- BDD: JUnit Platform (Para executar os testes) -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
@@ -109,9 +105,36 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Dependência Adicional para JUnit Platform Suite API (Resolve erros de @Suite) -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Adicione esta dependência ao seu pom.xml DENTRO da tag <dependencies> -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- REMOVIDO: io.cucumber:cucumber-junit (obsoleto e conflitante com Platform Engine) -->
+
     </dependencies>
 
     <build>
+        <!-- CORREÇÃO CHAVE: FORÇAR O MAVEN A INCLUIR ARQUIVOS DE TESTE (FEATURES/SCHEMAS) -->
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.feature</include>
+                    <include>schemas/*.json</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </testResource>
+        </testResources>
+
         <plugins>
             <!-- Plugin padrão do Spring Boot -->
             <plugin>

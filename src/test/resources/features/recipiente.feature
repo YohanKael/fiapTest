@@ -13,8 +13,9 @@ Funcionalidade: Gerenciamento de Recipientes
 
   Cenário: Cadastrar, Buscar e Validar o Contrato de um Recipiente com sucesso
     Dado que eu tenho os dados de um novo recipiente válido
-      | pontoColeta.idPonto | material.idMaterial | capacidadeMax | volumeAtual |
-      | 1                   | 1                   | 95.0          | 20.0        |
+      # USAMOS AGORA APENAS OS IDS SIMPLES (Long)
+      | idPontoColeta | idMaterial | capacidadeMax | volumeAtual |
+      | 1             | 1          | 95.0          | 20.0        |
     Quando eu envio uma requisição POST para "/recipientes"
     Então o status da resposta deve ser 201 Created
     E o corpo da resposta deve corresponder ao JSON Schema "recipiente_schema.json"
@@ -26,8 +27,8 @@ Funcionalidade: Gerenciamento de Recipientes
 
   Cenário: Atualizar e Deletar um Recipiente existente
     Dado que eu tenho os dados de um novo recipiente válido
-      | pontoColeta.idPonto | material.idMaterial | capacidadeMax | volumeAtual |
-      | 1                   | 1                   | 50.0          | 10.0        |
+      | idPontoColeta | idMaterial | capacidadeMax | volumeAtual |
+      | 1             | 1          | 50.0          | 10.0        |
     Quando eu envio uma requisição POST para "/recipientes"
     E eu recupero o ID do recipiente criado no contexto
 

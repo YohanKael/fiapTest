@@ -1,11 +1,13 @@
 package br.com.fiap.Reciclagem;
 
-import io.cucumber.junit.platform.engine.Cucumber;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.ConfigurationParameter;
 
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 
-@Cucumber
+@Suite
+@IncludeEngines("cucumber")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "br.com.fiap.Reciclagem.steps")
 public class TestRunner {
-    // Esta classe atua como o ponto de entrada para o JUnit 5 executar os arquivos .feature.
-    // As configurações de onde encontrar os steps e features são geralmente via arquivo cucumber.properties
-    // ou são detectadas automaticamente no classpath.
 }

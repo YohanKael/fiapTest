@@ -22,7 +22,7 @@ public class RecipienteService {
     private AlertaService alertaService;
 
     @Autowired
-    private PontoColetaService pontoColetaService;
+    private PontoColetaService pontoColetaService; // Assumimos que existe
 
     // Simulação de armazenamento em memória para Recipientes
     private final Map<Long, Recipiente> storage = new HashMap<>();
@@ -31,9 +31,17 @@ public class RecipienteService {
     // --- Métodos CRUD ---
 
     public Recipiente salvar(Recipiente recipiente) {
+        // Validação da regra de negócio: capacidade entre 0 e 100
         if (isCapacidadeInvalida(recipiente)) {
             throw new IllegalArgumentException("Capacidade máxima inválida ou ausente. Deve estar entre 0 e 100.");
         }
+
+        // Verifica se o Ponto de Coleta referenciado existe no Mock
+        if (pontoColetaService.buscarPorId(recipiente.getIdPontoColeta()).isEmpty()) {
+            throw new IllegalArgumentException("Ponto de Coleta referenciado (ID: " + recipiente.getIdPontoColeta() + ") não encontrado.");
+        }
+
+        // Regra de ID: se nulo, gera um novo
         if (recipiente.getIdRecipiente() == null) {
             recipiente.setIdRecipiente(idCounter.incrementAndGet());
         }
@@ -71,7 +79,6 @@ public class RecipienteService {
     // --- Lógica de Negócio (Alertas) ---
 
     private boolean isCapacidadeInvalida(Recipiente recipiente) {
-        // Validação da regra de negócio: capacidade entre 0 e 100
         return recipiente.getCapacidadeMax() == null || recipiente.getCapacidadeMax() <= 0 || recipiente.getCapacidadeMax() > 100;
     }
 
@@ -81,14 +88,14 @@ public class RecipienteService {
         double porcentagem = (recipiente.getVolumeAtual() / recipiente.getCapacidadeMax()) * 100;
 
         if (porcentagem > 70) {
-            Long idPonto = recipiente.getPontoColeta() != null ? recipiente.getPontoColeta().getIdPonto() : null;
-
-            // Busca o PontoColeta no Service Mock
-            Optional<PontoColeta> pontoColetaOpt = pontoColetaService.buscarPorId(idPonto);
+            // CORREÇÃO: Usa o novo campo IDPontoColeta diretamente (sem precisar de getPontoColeta())
+            Optional<PontoColeta> pontoColetaOpt = pontoColetaService.buscarPorId(recipiente.getIdPontoColeta());
 
             if (pontoColetaOpt.isPresent()) {
                 PontoColeta pontoColeta = pontoColetaOpt.get();
                 Alerta alerta = Alerta.builder()
+                        // Note: Alerta Model precisa ser adaptado para aceitar o ID ou o objeto PontoColeta
+                        // Assumimos que o Alerta Model aceita o objeto PontoColeta (como no código original)
                         .idPonto(pontoColeta)
                         .mensagem("Recipiente " + recipiente.getIdRecipiente() +
                                 " atingiu " + Math.round(porcentagem) + "% da capacidade no ponto: " +
@@ -111,6 +118,6 @@ public class RecipienteService {
     public void limparBase() {
         storage.clear();
         idCounter.set(0);
-        // Não limpamos Alertas e Pontos aqui, pois faremos isso em um Contexto de Teste separado.
+        // Note: As bases de PontoColeta e Material são limpas no Step Setup
     }
 }

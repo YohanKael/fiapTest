@@ -77,7 +77,6 @@ public class RecipienteController {
         return ResponseEntity.notFound().build();
     }
 
-    // Endpoint para buscar todos os alertas gerados (Útil para testes!)
     @GetMapping("/alertas")
     public ResponseEntity<List<Alerta>> buscarAlertas() {
         return ResponseEntity.ok(service.buscarAlertas());

@@ -1,10 +1,10 @@
-package br.com.fiap.Reciclagem;
+package br.com.fiap.Reciclagem.steps;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
-// IMPORTANTE: coloque a classe principal do seu Spring Boot aqui
-@SpringBootTest(classes = ReciclagemApplication.class)
+
 @CucumberContextConfiguration
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CucumberSpringConfiguration {
 }

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "items": {
+    "type": "object",
+    "properties": {
+      "idMaterial": {
+        "type": "number"
+      },
+      "nomeMaterial": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "idMaterial",
+      "nomeMaterial"
+    ]
+  }
+}

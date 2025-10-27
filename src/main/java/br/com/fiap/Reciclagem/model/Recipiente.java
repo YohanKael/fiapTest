@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-// Removidas anotações JPA
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +19,5 @@ public class Recipiente {
     private Double capacidadeMax;
     private Double volumeAtual;
     private LocalDate ultimaAtualizacao;
+
 }

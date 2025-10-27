@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "items": {
+    "type": "object",
+    "properties": {
+      "idPonto": {
+        "type": "number"
+      },
+      "nome": {
+        "type": "string"
+      },
+      "endereco": {
+        "type": "string"
+      },
+      "bairro": {
+        "type": "string"
+      },
+      "cidade": {
+        "type": "string"
+      },
+      "estado": {
+        "type": "string"
+      },
+      "cep": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "idPonto",
+      "nome",
+      "endereco",
+      "bairro",
+      "cidade",
+      "estado",
+      "cep"
+    ]
+  }
+}

@@ -1,7 +1,5 @@
 package br.com.fiap.Reciclagem.services;
 
-import br.com.fiap.Reciclagem.model.Material;
-import br.com.fiap.Reciclagem.model.PontoColeta;
 import br.com.fiap.Reciclagem.model.Recipiente;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,7 +27,6 @@ public class RecipienteTestService {
     public RecipienteTestService() {
         this.recipienteModel = new Recipiente();
 
-        // Configuração da Gson para tratar LocalDate (CORRIGE ERRO DE JAVA 21)
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (date, typeOfSrc, context) ->
                 context.serialize(date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
@@ -51,16 +48,19 @@ public class RecipienteTestService {
         this.response = response;
     }
 
-    // Método que o professor chamou de 'setFieldsDelivery'
+    // Ajustado para normalizar ponto decimal e aceitar diferentes capitalizações
     public void setRecipienteField(String field, String value) {
+        if (value == null || value.isEmpty()) return;
+
         switch (field.toLowerCase()) {
             case "capacidademax":
+                value = value.replace(",", ".");
                 recipienteModel.setCapacidadeMax(Double.parseDouble(value));
                 break;
             case "volumeatual":
+                value = value.replace(",", ".");
                 recipienteModel.setVolumeAtual(Double.parseDouble(value));
                 break;
-            // CORREÇÃO: Recebe ID diretamente e seta no campo Long
             case "idpontocoleta":
                 recipienteModel.setIdPontoColeta(Long.parseLong(value));
                 break;
@@ -68,7 +68,7 @@ public class RecipienteTestService {
                 recipienteModel.setIdMaterial(Long.parseLong(value));
                 break;
             case "ultimaatualizacao":
-                recipienteModel.setUltimaAtualizacao(LocalDate.parse(value));
+                recipienteModel.setUltimaAtualizacao(LocalDate.parse(value, DateTimeFormatter.ISO_LOCAL_DATE));
                 break;
             default:
                 throw new IllegalArgumentException("Campo não mapeado no RecipienteTestService: " + field);

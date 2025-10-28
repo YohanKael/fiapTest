@@ -18,7 +18,7 @@ Funcionalidade: Gerenciamento de Pontos de Coleta via API REST
       | Ponto Central  | Rua A, 123         | Centro        | São Paulo     | SP     | 01000-000  |
     Quando eu envio uma requisição POST para "/pontos-coleta" de Ponto de Coleta
     Então o status da resposta de Ponto de Coleta deve ser 201 Created
-    E o corpo da resposta de Ponto de Coleta deve corresponder ao JSON Schema "pontocoleta_schema.json"
+    E o corpo da resposta deve corresponder ao JSON Schema "pontocoleta_schema.json"
     E o campo "nome" na resposta deve ser igual a "Ponto Central"
 
 # --- CENÁRIO 2: Consulta por ID (GET - Sucesso) ---
@@ -34,7 +34,7 @@ Funcionalidade: Gerenciamento de Pontos de Coleta via API REST
 # Ação: Busca o item recém-criado
     Quando eu envio uma requisição GET para "/pontos-coleta/{id}" de Ponto de Coleta
     Então o status da resposta de Ponto de Coleta deve ser 200 OK
-    E o corpo da resposta de Ponto de Coleta deve corresponder ao JSON Schema "pontocoleta_schema.json"
+    E o corpo da resposta deve corresponder ao JSON Schema "pontocoleta_schema.json"
     E o campo "cidade" na resposta deve ser igual a "Campinas"
 
 
@@ -44,7 +44,7 @@ Funcionalidade: Gerenciamento de Pontos de Coleta via API REST
 # Ação: Busca um ID que não deve existir
     Quando eu envio uma requisição GET para "/pontos-coleta/999" de Ponto de Coleta
     Então o status da resposta de Ponto de Coleta deve ser 404 Not Found
-    E o corpo da resposta de Ponto de Coleta deve ser vazio
+    E o corpo da resposta deve ser vazio
 
 # --- CENÁRIO 4: Atualização (PUT) ---
 
@@ -60,7 +60,7 @@ Funcionalidade: Gerenciamento de Pontos de Coleta via API REST
     Quando eu atualizo o nome do Ponto de Coleta para "Ponto Leste - Novo Nome"
     E eu envio uma requisição PUT para "/pontos-coleta/{id}" de Ponto de Coleta com os dados atualizados
     Então o status da resposta de Ponto de Coleta deve ser 200 OK
-    E o corpo da resposta de Ponto de Coleta deve corresponder ao JSON Schema "pontocoleta_schema.json"
+    E o corpo da resposta deve corresponder ao JSON Schema "pontocoleta_schema.json"
     E o campo "nome" na resposta deve ser igual a "Ponto Leste - Novo Nome"
 
 
@@ -77,7 +77,7 @@ Funcionalidade: Gerenciamento de Pontos de Coleta via API REST
 # Ação: Deleta o item
     Quando eu envio uma requisição DELETE para "/pontos-coleta/{id}" de Ponto de Coleta
     Então o status da resposta de Ponto de Coleta deve ser 204 No Content
-    E o corpo da resposta de Ponto de Coleta deve ser vazio
+    E o corpo da resposta deve ser vazio
 
 # Verificação: Tenta buscar o item deletado
     Quando eu envio uma requisição GET para "/pontos-coleta/{id}" de Ponto de Coleta

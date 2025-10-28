@@ -10,9 +10,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
-import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -21,7 +19,6 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PontoColetaTestSteps {
 
@@ -136,9 +133,7 @@ public class PontoColetaTestSteps {
 
 
     // --- STEPS DE ENTÃO (VALIDAÇÃO) ---
-    // NOTA: Os passos de status code foram MANTIDOS AQUI com o prefixo 'de Ponto de Coleta'
-    // para garantir que eles não entrem em conflito com os passos originais (sem prefixo)
-    // da classe RecipienteTestSteps, caso eles não tenham sido corrigidos lá.
+    // MANTIDOS os Steps de Status, pois são específicos (com prefixo "de Ponto de Coleta")
 
     @Then("o status da resposta de Ponto de Coleta deve ser {int} Created")
     public void oStatusDaRespostaDePontoDeColetaDeveSerCreated(int statusCode) {
@@ -160,23 +155,5 @@ public class PontoColetaTestSteps {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    @And("o corpo da resposta de Ponto de Coleta deve corresponder ao JSON Schema {string}")
-    public void oCorpoDaRespostaDePontoDeColetaDeveCorresponderAoJSONSchema(String schemaName) {
-        testService.response.then().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/" + schemaName));
-    }
-
-    @And("o campo {string} na resposta deve ser igual a {string}")
-    public void oCampoNaRespostaDeveSerIgualA(String campo, String valorEsperado) {
-        String valorAtual = testService.response.jsonPath().getString(campo);
-        Assertions.assertEquals(valorEsperado, valorAtual,
-                "O campo '" + campo + "' não corresponde ao valor esperado. " +
-                        "Esperado: <" + valorEsperado + "> mas foi: <" + valorAtual + ">"
-        );
-    }
-
-    @And("o corpo da resposta de Ponto de Coleta deve ser vazio")
-    public void oCorpoDaRespostaDePontoDeColetaDeveSerVazio() {
-        assertTrue(testService.response.body().asString().isEmpty() || testService.response.body().asString().trim().isEmpty(),
-                "O corpo da resposta deveria ser vazio, mas contém: " + testService.response.body().asString());
-    }
+    // REMOVIDOS OS PASSOS DE VALIDAÇÃO DE CAMPO/SCHEMA/CORPO VAZIO
 }

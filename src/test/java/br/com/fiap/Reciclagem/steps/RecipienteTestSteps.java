@@ -11,28 +11,24 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
+import io.cucumber.java.en.Then; // Mantido apenas por causa do Then genérico
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
-import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RecipienteTestSteps {
 
     @LocalServerPort
     private int port;
 
-    // Assumindo que RecipienteTestService gerencia o RestAssured e o modelo de Recipiente DTO
     @Autowired private RecipienteTestService testService;
 
     // Services de Produção (Mocks) - Mantenha a injeção para o setup
@@ -46,10 +42,7 @@ public class RecipienteTestSteps {
 
     @Before
     public void setup() {
-        // Lógica de limpeza (certifique-se de que os métodos existam nos seus services)
-        // pontoColetaService.limparBase();
-        // materialService.limparBase();
-        // recipienteService.limparBase();
+        // Lógica de limpeza (omitida)
 
         // Configuração de ambiente e porta
         testService.setPort(this.port);
@@ -93,27 +86,20 @@ public class RecipienteTestSteps {
     // CORREÇÃO CRÍTICA DO PATH PARAMETER (Unnamed path parameter cannot be null)
     @When("eu envio uma requisição GET para {string}")
     public void euEnvioUmaRequisicaoGETPara(String endpoint) {
-        // Constrói a URL base com a porta aleatória
         String fullUrl = BASE_URI + ":" + testService.port + endpoint;
-
         Response apiResponse;
 
         if (endpoint.contains("{id}")) {
-            // Caso 1: Endpoint usa placeholder {id} (Ex: /recipientes/{id})
-            // Usa o ID criado no Cenário 1 ou 2. Se for nulo, ainda pode ocorrer um 500/404 na API real,
-            // mas o RestAssured não vai quebrar com o erro de parâmetro nulo.
             assertNotNull(idRecipienteCriado, "Erro de lógica: Tentativa de GET para {id} sem ID criado previamente.");
-
             apiResponse = given()
                     .contentType(ContentType.JSON)
                     .when()
-                    .get(fullUrl, idRecipienteCriado); // RestAssured substitui o {id} pelo valor
+                    .get(fullUrl, idRecipienteCriado);
         } else {
-            // Caso 2: Endpoint já contém o ID fixo (Ex: /recipientes/999) - CENÁRIO 3
             apiResponse = given()
                     .contentType(ContentType.JSON)
                     .when()
-                    .get(fullUrl); // Chamada direta, sem path parameter
+                    .get(fullUrl);
         }
 
         testService.setResponse(apiResponse);
@@ -159,68 +145,40 @@ public class RecipienteTestSteps {
     }
 
 
-    // --- STEPS DE ENTÃO (VALIDAÇÃO) - CORREÇÃO DE STATUS (RESOLVE UndefinedStepException) ---
+    // --- STEPS DE ENTÃO (VALIDAÇÃO) ---
+    // NOTA: Movendo todos os steps genéricos para BaseValidationSteps.java
+    // e deixando apenas os steps de status code aqui por compatibilidade ou para serem movidos
 
-    // Passo para 201 Created (Cenário 1)
+    // Mantenha os Status Code por enquanto, pois seu 'recipiente.feature' os usa sem prefixo.
+
     @Then("o status da resposta deve ser {int} Created")
     public void oStatusDaRespostaDeveSerCreated(int statusCode) {
+        // Este step pode ser movido para BaseValidationSteps se todos usarem a mesma frase
+        // e você tiver ajustado todos os features. Por agora, mantemos aqui.
+        // O mesmo vale para OK, No Content e Not Found
+        // OBS: o teste falhará se o PontoColeta.feature usar esta mesma frase!
+        // No momento, o PontoColeta.feature usa "o status da resposta de Ponto de Coleta deve ser..."
+        // Portanto, estes aqui são seguros por enquanto.
+
+        // MANTIDO: Assumimos que o Recipiente.feature usa essa versão genérica.
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // Passo para 200 OK (Cenários 2 e 4)
     @Then("o status da resposta deve ser {int} OK")
     public void oStatusDaRespostaDeveSerOK(int statusCode) {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // Passo para 204 No Content (Cenário 5)
     @Then("o status da resposta deve ser {int} No Content")
     public void oStatusDaRespostaDeveSerNoContent(int statusCode) {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // Passo para 404 Not Found (Cenários 3 e 5)
     @Then("o status da resposta deve ser {int} Not Found")
     public void oStatusDaRespostaDeveSerNotFound(int statusCode) {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // Passo genérico para validação de campos
-    @And("o corpo da resposta deve corresponder ao JSON Schema {string}")
-    public void oCorpoDaRespostaDeveCorresponderAoJSONSchema(String schemaName) {
-        // Assume que o schema está em src/test/resources/schemas/
-        testService.response.then().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/" + schemaName));
-    }
-
-    // Passo genérico para validação de valores double
-    @And("o campo {string} na resposta deve ser igual a {double}")
-    public void oCampoNaRespostaDeveSerIgualA(String campo, double valorEsperado) {
-
-        // 1. Obtém o valor real retornado pela API
-        Double valorAtual = testService.response.jsonPath().getDouble(campo);
-
-        // 2. Compara o valor do Gherkin (valorEsperado) com o valor da API (valorAtual)
-        // O erro "expected: <200.0> but was: <20.0>" indica que o código que está rodando
-        // na linha da asserção é algo como: 'Assertions.assertEquals(valorEsperado * 10, valorAtual, ...)'
-
-
-        // CORREÇÃO: Garanta que você está usando 'valorEsperado' diretamente.
-        System.out.println("DEBUG - Valor Esperado (Gherkin): " + valorEsperado);
-        System.out.println("DEBUG - Valor Atual (API): " + valorAtual);
-        Assertions.assertEquals(
-                valorEsperado, // Deve ser 20.0, 70.0, etc.
-                valorAtual,
-                0.01, // Tolerância para ponto flutuante
-                "O campo '" + campo + "' não corresponde ao valor esperado. " +
-                        "Esperado: <" + valorEsperado + "> mas foi: <" + valorAtual + ">"
-        );
-    }
-
-    // Passo para validação de corpo vazio
-    @And("o corpo da resposta deve ser vazio")
-    public void oCorpoDaRespostaDeveSerVazio() {
-        // Verifica se o corpo é vazio ou tem tamanho irrelevante (por exemplo, um newline ou espaço)
-        assertTrue(testService.response.body().asString().isEmpty() || testService.response.body().asString().trim().isEmpty(),
-                "O corpo da resposta deveria ser vazio, mas contém: " + testService.response.body().asString());
-    }
+    // REMOVIDOS OS PASSOS DE VALIDAÇÃO DE CAMPO/SCHEMA/CORPO VAZIO
+    // Eles devem ser chamados pelo BaseValidationSteps.java
 }

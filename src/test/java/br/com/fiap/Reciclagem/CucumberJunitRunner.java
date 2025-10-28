@@ -15,9 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
         plugin = {"pretty", "html:target/cucumber-report.html"}
 )
 
-// As anotações do Spring (como antes)
+// As anotações do Spring
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = br.com.fiap.Reciclagem.ReciclagemApplication.class)
 public class CucumberJunitRunner {
-    // Esta classe fica vazia.
 }

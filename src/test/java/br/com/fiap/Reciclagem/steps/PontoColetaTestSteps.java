@@ -41,14 +41,13 @@ public class PontoColetaTestSteps {
         testService.setPort(this.port);
         testService.resetModel();
         testService.setResponse(null);
-        idPontoColetaCriado = null; // Limpa o ID para o próximo cenário
+        idPontoColetaCriado = null;
     }
 
     // --- STEPS DE DADO (SETUP) ---
 
     @Given("que o ambiente de teste de Ponto de Coleta está pronto")
     public void queOAmbienteDeTesteDePontoDeColetaEstaPronto() {
-        // Nada a fazer
     }
 
     @Given("que eu tenho os dados de um novo Ponto de Coleta válido")
@@ -79,7 +78,7 @@ public class PontoColetaTestSteps {
             apiResponse = given()
                     .contentType(ContentType.JSON)
                     .when()
-                    .get(fullUrl, idPontoColetaCriado); // RestAssured substitui o {id}
+                    .get(fullUrl, idPontoColetaCriado);
         } else {
             apiResponse = given()
                     .contentType(ContentType.JSON)
@@ -133,7 +132,6 @@ public class PontoColetaTestSteps {
 
 
     // --- STEPS DE ENTÃO (VALIDAÇÃO) ---
-    // MANTIDOS os Steps de Status, pois são específicos (com prefixo "de Ponto de Coleta")
 
     @Then("o status da resposta de Ponto de Coleta deve ser {int} Created")
     public void oStatusDaRespostaDePontoDeColetaDeveSerCreated(int statusCode) {
@@ -155,5 +153,4 @@ public class PontoColetaTestSteps {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // REMOVIDOS OS PASSOS DE VALIDAÇÃO DE CAMPO/SCHEMA/CORPO VAZIO
 }

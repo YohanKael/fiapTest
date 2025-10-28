@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Este modelo replica a estrutura da entidade principal para uso no DTO de testes.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

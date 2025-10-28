@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Alerta Item Schema",
+  "type": "object",
+  "properties": {
+    "idAlerta": {
+      "type": "integer"
+    },
+    "idPonto": {
+      "type": "object",
+      "properties": {
+        "idPonto": {
+          "type": "integer"
+        },
+
+        "nome": {"type": ["string", "null"]},
+        "endereco": {"type": ["string", "null"]},
+        "bairro": {"type": ["string", "null"]},
+        "cidade": {"type": ["string", "null"]},
+        "estado": {"type": ["string", "null"]},
+        "cep": {"type": ["string", "null"]}
+      },
+
+      "required": ["idPonto"]
+    },
+    "mensagem": {
+      "type": "string"
+    },
+    "ultimaAtualizacao": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "idAlerta",
+    "idPonto",
+    "mensagem",
+    "ultimaAtualizacao"
+  ],
+  "additionalProperties": false
+}

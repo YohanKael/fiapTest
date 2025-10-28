@@ -48,7 +48,6 @@ public class MaterialTestSteps {
 
     @Given("que o ambiente de teste de Material está pronto")
     public void queOAmbienteDeTesteDeMaterialEstaPronto() {
-        // Nada a fazer
     }
 
     @Given("que eu tenho os dados de um novo Material válido")
@@ -79,7 +78,7 @@ public class MaterialTestSteps {
             apiResponse = given()
                     .contentType(ContentType.JSON)
                     .when()
-                    .get(fullUrl, idMaterialCriado); // RestAssured substitui o {id}
+                    .get(fullUrl, idMaterialCriado);
         } else {
             apiResponse = given()
                     .contentType(ContentType.JSON)
@@ -133,8 +132,6 @@ public class MaterialTestSteps {
 
 
     // --- STEPS DE ENTÃO (VALIDAÇÃO) ---
-    // MANTIDOS os Steps de Status, pois são específicos (com prefixo "de Material")
-
     @Then("o status da resposta de Material deve ser {int} Created")
     public void oStatusDaRespostaDeMaterialDeveSerCreated(int statusCode) {
         assertEquals(statusCode, testService.response.getStatusCode());
@@ -155,5 +152,4 @@ public class MaterialTestSteps {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // REMOVIDOS OS PASSOS DE VALIDAÇÃO DE CAMPO/SCHEMA/CORPO VAZIO
 }

@@ -20,7 +20,6 @@ public class PontoColetaTestService {
 
     public PontoColetaTestService() {
         this.pontoColetaModel = new PontoColeta();
-        // O Gson padrão é suficiente, pois PontoColeta não tem campos de data complexos.
         this.gson = new Gson();
     }
 

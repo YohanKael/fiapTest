@@ -88,7 +88,7 @@ public class RecipienteService {
         double porcentagem = (recipiente.getVolumeAtual() / recipiente.getCapacidadeMax()) * 100;
 
         if (porcentagem > 70) {
-            // CORREÇÃO: Usa o novo campo IDPontoColeta diretamente (sem precisar de getPontoColeta())
+            // Usa o novo campo IDPontoColeta diretamente (sem precisar de getPontoColeta())
             Optional<PontoColeta> pontoColetaOpt = pontoColetaService.buscarPorId(recipiente.getIdPontoColeta());
 
             if (pontoColetaOpt.isPresent()) {
@@ -113,11 +113,11 @@ public class RecipienteService {
     }
 
     /**
-     * Método auxiliar para limpar o MockDatabase nos testes BDD.
+     * Metodo auxiliar para limpar o MockDatabase nos testes BDD.
      */
     public void limparBase() {
         storage.clear();
         idCounter.set(0);
-        // Note: As bases de PontoColeta e Material são limpas no Step Setup
+        // As bases de PontoColeta e Material são limpas no Step Setup
     }
 }

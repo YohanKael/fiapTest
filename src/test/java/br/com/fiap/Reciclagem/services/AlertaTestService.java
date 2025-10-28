@@ -1,6 +1,7 @@
 package br.com.fiap.Reciclagem.services;
 
-import br.com.fiap.Reciclagem.model.Recipiente;
+import br.com.fiap.Reciclagem.model.Alerta;
+import br.com.fiap.Reciclagem.model.PontoColeta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -15,18 +16,19 @@ import java.time.format.DateTimeFormatter;
 import static io.restassured.RestAssured.given;
 
 @Service
-public class RecipienteTestService {
+public class AlertaTestService {
 
-    private Recipiente recipienteModel;
+    private Alerta alertaModel;
     public Response response;
     public final Gson gson;
     public int port;
 
     private final String BASE_URI = "http://localhost";
 
-    public RecipienteTestService() {
-        this.recipienteModel = new Recipiente();
+    public AlertaTestService() {
+        this.alertaModel = new Alerta();
 
+        // Configuração do Gson para serializar e deserializar LocalDate (igual ao Recipiente)
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (date, typeOfSrc, context) ->
                 context.serialize(date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
@@ -37,7 +39,7 @@ public class RecipienteTestService {
     }
 
     public void resetModel() {
-        this.recipienteModel = new Recipiente();
+        this.alertaModel = new Alerta();
     }
 
     public void setPort(int port) {
@@ -48,39 +50,43 @@ public class RecipienteTestService {
         this.response = response;
     }
 
-    public void setRecipienteField(String field, String value) {
+    /**
+     * Mapeia valores de String (vindos do Gherkin DataTable) para os campos do modelo Alerta.
+     */
+    public void setAlertaField(String field, String value) {
         if (value == null || value.isEmpty()) return;
 
         switch (field.toLowerCase()) {
-            case "capacidademax":
-                value = value.replace(",", ".");
-                recipienteModel.setCapacidadeMax(Double.parseDouble(value));
-                break;
-            case "volumeatual":
-                value = value.replace(",", ".");
-                recipienteModel.setVolumeAtual(Double.parseDouble(value));
+            case "mensagem":
+                alertaModel.setMensagem(value);
                 break;
             case "idpontocoleta":
-                recipienteModel.setIdPontoColeta(Long.parseLong(value));
-                break;
-            case "idmaterial":
-                recipienteModel.setIdMaterial(Long.parseLong(value));
+                PontoColeta ponto = PontoColeta.builder().idPonto(Long.parseLong(value)).build();
+                alertaModel.setIdPonto(ponto);
                 break;
             case "ultimaatualizacao":
-                recipienteModel.setUltimaAtualizacao(LocalDate.parse(value, DateTimeFormatter.ISO_LOCAL_DATE));
+                alertaModel.setUltimaAtualizacao(LocalDate.parse(value, DateTimeFormatter.ISO_LOCAL_DATE));
+                break;
+            case "idalerta":
+                alertaModel.setIdAlerta(Long.parseLong(value));
                 break;
             default:
-                throw new IllegalArgumentException("Campo não mapeado no RecipienteTestService: " + field);
+                throw new IllegalArgumentException("Campo não mapeado no AlertaTestService: " + field);
         }
     }
 
-    public Response createRecipiente(String endPoint) {
-        recipienteModel.setIdRecipiente(null);
-        if (recipienteModel.getUltimaAtualizacao() == null) {
-            recipienteModel.setUltimaAtualizacao(LocalDate.now());
+    /**
+     * Executa a requisição POST para criação de um novo Alerta.
+     */
+    public Response createAlerta(String endPoint) {
+        alertaModel.setIdAlerta(null);
+
+        // Se a data não foi setada, usamos a data atual (similar ao Recipiente)
+        if (alertaModel.getUltimaAtualizacao() == null) {
+            alertaModel.setUltimaAtualizacao(LocalDate.now());
         }
 
-        String bodyToSend = gson.toJson(recipienteModel);
+        String bodyToSend = gson.toJson(alertaModel);
 
         response = given()
                 .contentType(ContentType.JSON)
@@ -95,12 +101,15 @@ public class RecipienteTestService {
         return response;
     }
 
+    /**
+     * Atualiza o modelo de teste com o ID retornado na resposta da criação.
+     */
     public void updateModelWithResponseId(Response apiResponse) {
-        Long id = apiResponse.jsonPath().getLong("idRecipiente");
-        recipienteModel.setIdRecipiente(id);
+        Long id = apiResponse.jsonPath().getLong("idAlerta");
+        alertaModel.setIdAlerta(id);
     }
 
-    public Recipiente getRecipienteModel() {
-        return recipienteModel;
+    public Alerta getAlertaModel() {
+        return alertaModel;
     }
 }

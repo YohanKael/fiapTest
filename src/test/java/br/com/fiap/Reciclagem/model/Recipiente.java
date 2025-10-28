@@ -12,10 +12,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Recipiente {
-    private Long idRecipiente;                 // ID retornado pela API
-    private Long idPontoColeta;      // Relacionamento
-    private Long idMaterial;         // Relacionamento
-    private Double capacidadeMax;    // Máxima capacidade do recipiente
-    private Double volumeAtual;      // Volume atual do recipiente
-    private LocalDate ultimaAtualizacao; // Última atualização
+    private Long idRecipiente;
+    private Long idPontoColeta;
+    private Long idMaterial;
+    private Double capacidadeMax;
+    private Double volumeAtual;
+    private LocalDate ultimaAtualizacao;
 }

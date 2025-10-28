@@ -64,7 +64,7 @@ public class PontoColetaService {
     }
 
     /**
-     * Método auxiliar para limpar o MockDatabase nos testes BDD.
+     * Metodo auxiliar para limpar o MockDatabase nos testes BDD.
      */
     public void limparBase() {
         storage.clear();

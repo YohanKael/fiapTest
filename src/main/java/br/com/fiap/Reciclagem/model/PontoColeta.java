@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Removidas anotações JPA: @Entity, @Table, @Id, @GeneratedValue, @Column
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

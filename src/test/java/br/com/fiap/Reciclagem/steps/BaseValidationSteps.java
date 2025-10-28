@@ -1,5 +1,6 @@
 package br.com.fiap.Reciclagem.steps;
 
+import br.com.fiap.Reciclagem.services.AlertaTestService;
 import br.com.fiap.Reciclagem.services.PontoColetaTestService;
 import br.com.fiap.Reciclagem.services.RecipienteTestService;
 import br.com.fiap.Reciclagem.services.MaterialTestService;
@@ -18,6 +19,7 @@ public class BaseValidationSteps {
     @Autowired(required = false) private RecipienteTestService recipienteTestService;
     @Autowired(required = false) private PontoColetaTestService pontoColetaTestService;
     @Autowired(required = false) private MaterialTestService materialTestService;
+    @Autowired(required = false) private AlertaTestService alertaTestService;
 
     /**
      * Retorna a Response mais recente de qualquer um dos Test Services.
@@ -33,6 +35,10 @@ public class BaseValidationSteps {
         if (materialTestService != null && materialTestService.response != null) {
             return materialTestService.response;
         }
+        if (alertaTestService != null && alertaTestService.response != null) {
+            return alertaTestService.response;
+        }
+
         throw new IllegalStateException("Nenhuma Response de API ativa encontrada em nenhum Test Service.");
     }
 

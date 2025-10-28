@@ -11,7 +11,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then; // Mantido apenas por causa do Then genérico
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import io.restassured.http.ContentType;
@@ -42,20 +42,18 @@ public class RecipienteTestSteps {
 
     @Before
     public void setup() {
-        // Lógica de limpeza (omitida)
 
         // Configuração de ambiente e porta
         testService.setPort(this.port);
         testService.resetModel();
         testService.setResponse(null);
-        idRecipienteCriado = null; // Limpa o ID para o próximo cenário
+        idRecipienteCriado = null;
     }
 
     // --- STEPS DE DADO (SETUP) ---
 
     @Given("que o ambiente de teste está pronto")
     public void queOAmbienteDeTesteEstaPronto() {
-        // Nada a fazer
     }
 
     @Given("que um Ponto de Coleta com ID {int} e um Material com ID {int} estão cadastrados")
@@ -83,7 +81,6 @@ public class RecipienteTestSteps {
         testService.createRecipiente(endpoint);
     }
 
-    // CORREÇÃO CRÍTICA DO PATH PARAMETER (Unnamed path parameter cannot be null)
     @When("eu envio uma requisição GET para {string}")
     public void euEnvioUmaRequisicaoGETPara(String endpoint) {
         String fullUrl = BASE_URI + ":" + testService.port + endpoint;
@@ -134,33 +131,21 @@ public class RecipienteTestSteps {
         testService.setResponse(apiResponse);
     }
 
-    // CORREÇÃO: Passo de recuperação de ID limpo (sem o comentário no Gherkin)
     @And("eu recupero o ID do recipiente criado no contexto")
     public void euRecuperoOIDDoRecipienteCriadoNoContexto() {
         idRecipienteCriado = testService.response.jsonPath().getLong("idRecipiente");
         assertNotNull(idRecipienteCriado, "Não foi possível recuperar o ID 'idRecipiente' da resposta JSON.");
 
-        // Atualiza o modelo no service para que o PUT/GET use o ID correto
         testService.updateModelWithResponseId(testService.response);
     }
 
 
     // --- STEPS DE ENTÃO (VALIDAÇÃO) ---
-    // NOTA: Movendo todos os steps genéricos para BaseValidationSteps.java
-    // e deixando apenas os steps de status code aqui por compatibilidade ou para serem movidos
 
-    // Mantenha os Status Code por enquanto, pois seu 'recipiente.feature' os usa sem prefixo.
 
     @Then("o status da resposta deve ser {int} Created")
     public void oStatusDaRespostaDeveSerCreated(int statusCode) {
-        // Este step pode ser movido para BaseValidationSteps se todos usarem a mesma frase
-        // e você tiver ajustado todos os features. Por agora, mantemos aqui.
-        // O mesmo vale para OK, No Content e Not Found
-        // OBS: o teste falhará se o PontoColeta.feature usar esta mesma frase!
-        // No momento, o PontoColeta.feature usa "o status da resposta de Ponto de Coleta deve ser..."
-        // Portanto, estes aqui são seguros por enquanto.
 
-        // MANTIDO: Assumimos que o Recipiente.feature usa essa versão genérica.
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
@@ -179,6 +164,4 @@ public class RecipienteTestSteps {
         assertEquals(statusCode, testService.response.getStatusCode());
     }
 
-    // REMOVIDOS OS PASSOS DE VALIDAÇÃO DE CAMPO/SCHEMA/CORPO VAZIO
-    // Eles devem ser chamados pelo BaseValidationSteps.java
 }
